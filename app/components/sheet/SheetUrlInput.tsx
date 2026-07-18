@@ -13,6 +13,8 @@ export default function SheetUrlInput({
     <div>
       <input
         type="text"
+        value={value}
+        onChange={onChange}
         placeholder="Paste your Google Sheet URL..."
         className="flex-1 bg-zinc-800 rounded-lg p-3"
       />

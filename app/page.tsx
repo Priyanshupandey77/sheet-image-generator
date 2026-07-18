@@ -3,6 +3,7 @@ import { useState } from "react";
 import Button from "./components/common/Button";
 import HeroSection from "./components/hero/HeroSection";
 import SheetUrlInput from "./components/sheet/SheetUrlInput";
+import PatientList from "./components/patient/PatientList";
 
 export default function Home() {
   const [sheetUrl, setSheetUrl] = useState("");
@@ -14,6 +15,7 @@ export default function Home() {
     try {
       setError("");
       setLoading(true);
+      console.log("Sending URL:", sheetUrl);
       const response = await fetch("/api/sheets", {
         method: "POST",
         headers: {
@@ -25,6 +27,12 @@ export default function Home() {
         throw new Error("Failed to fetch data");
       }
       const data = await response.json();
+      console.log("Response:", data);
+      console.log("Is Array:", Array.isArray(data));
+      if (data.success === false) {
+        setError(data.message);
+        return;
+      }
       setPatients(data);
     } catch (error) {
       console.log(error);
@@ -43,11 +51,11 @@ export default function Home() {
         />
         <Button
           children="Fetch Data"
-          onClick={undefined}
-          disabled={undefined}
-          type={undefined}
+          onClick={handleFetch}
+          disabled={loading}
+          type="button"
         />
-        
+        <PatientList patients={patients} />
       </div>
     </main>
   );
