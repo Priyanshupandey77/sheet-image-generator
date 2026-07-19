@@ -14,10 +14,34 @@ export async function POST(request: NextRequest) {
   const startIndex = sheetUrl.indexOf("d/") + 2;
   const endIndex = sheetUrl.indexOf("/edit");
   const sheetId = sheetUrl.substring(startIndex, endIndex);
+  const metadataUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}?key=${process.env.GOOGLE_SHEETS_API_KEY}`;
+  const metadataResponse = await fetch(metadataUrl);
+  if (!metadataResponse.ok) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Unable to fetch spreadsheet metadata",
+      },
+      { status: 400 },
+    );
+  }
 
-  const googleApiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/Sheet1?key=${process.env.GOOGLE_SHEETS_API_KEY}`;
+  const metadata = await metadataResponse.json();
+
+  const sheetName = metadata.sheets[0].properties.title;
+
+  const googleApiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${encodeURIComponent(sheetName)}?key=${process.env.GOOGLE_SHEETS_API_KEY}`;
 
   const response = await fetch(googleApiUrl);
+  if (!response.ok) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Unable to fetch response",
+      },
+      { status: 400 },
+    );
+  }
 
   const data = await response.json();
   const headers = data.values[0];
@@ -30,6 +54,6 @@ export async function POST(request: NextRequest) {
     }
     patients.push(patient);
   }
-  
+
   return NextResponse.json(patients);
 }
