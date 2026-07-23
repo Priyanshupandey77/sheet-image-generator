@@ -36,4 +36,4 @@ Designed with performance and usability in mind, the project features a clean, r
 - Vercel
 - npm
 
-This project demonstrates practical full-stack development with **Next.js**, **TypeScript**, **Google Sheets API**, and **server-side API routes**, showcasing how modern web technologies can automate repetitive tasks and simplify bulk image generation workflows.
+This project demonstrates practical full-stack development with **Next.js**, **TypeScript**, **Google Sheets API**, and **server-side API routes**, showcasing how modern web technologies can automate repetitive tasks and simplify bulk image generation workflows..
